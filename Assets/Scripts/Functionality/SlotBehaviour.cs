@@ -108,6 +108,7 @@ public class SlotBehaviour : MonoBehaviour
     [SerializeField]
     private TMP_Text FSnum_text;
 
+    [SerializeField]
     int tweenHeight = 0;  //calculate the height at which tweening is done
 
     [SerializeField]
@@ -168,8 +169,6 @@ public class SlotBehaviour : MonoBehaviour
         if (AutoSpinStop_Button) AutoSpinStop_Button.onClick.AddListener(StopAutoSpin);
 
         if (FSBoard_Object) FSBoard_Object.SetActive(false);
-
-        tweenHeight = (15 * IconSizeFactor) - 280;
     }
 
     #region Autospin
@@ -550,19 +549,19 @@ public class SlotBehaviour : MonoBehaviour
         {
             BalanceDeduction();
         }
-        SocketManager.AccumulateResult(BetCounter);
+        //SocketManager.AccumulateResult(BetCounter);
 
-        yield return new WaitUntil(() => SocketManager.isResultdone);
+        //yield return new WaitUntil(() => SocketManager.isResultdone);
 
-        for (int j = 0; j < SocketManager.resultData.ResultReel.Count; j++)
-        {
-            List<int> resultnum = SocketManager.resultData.FinalResultReel[j]?.Split(',')?.Select(Int32.Parse)?.ToList();
-            for (int i = 0; i < 5; i++)
-            {
-                if (images[i].slotImages[images[i].slotImages.Count - 5 + j]) images[i].slotImages[images[i].slotImages.Count - 5 + j].sprite = myImages[resultnum[i]];
-                PopulateAnimationSprites(images[i].slotImages[images[i].slotImages.Count - 5 + j].gameObject.GetComponent<ImageAnimation>(), resultnum[i]);
-            }
-        }
+        //for (int j = 0; j < SocketManager.resultData.ResultReel.Count; j++)
+        //{
+        //    List<int> resultnum = SocketManager.resultData.FinalResultReel[j]?.Split(',')?.Select(Int32.Parse)?.ToList();
+        //    for (int i = 0; i < 5; i++)
+        //    {
+        //        if (images[i].slotImages[images[i].slotImages.Count - 5 + j]) images[i].slotImages[images[i].slotImages.Count - 5 + j].sprite = myImages[resultnum[i]];
+        //        PopulateAnimationSprites(images[i].slotImages[images[i].slotImages.Count - 5 + j].gameObject.GetComponent<ImageAnimation>(), resultnum[i]);
+        //    }
+        //}
 
         yield return new WaitForSeconds(0.5f);
 
@@ -572,62 +571,62 @@ public class SlotBehaviour : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.3f);
-        CheckPayoutLineBackend(SocketManager.resultData.linesToEmit, SocketManager.resultData.FinalsymbolsToEmit, SocketManager.resultData.jackpot);
+        //CheckPayoutLineBackend(SocketManager.resultData.linesToEmit, SocketManager.resultData.FinalsymbolsToEmit, SocketManager.resultData.jackpot);
         KillAllTweens();
 
-        CheckPopups = true;
+        //CheckPopups = true;
 
-        if (TotalWin_text) TotalWin_text.text = SocketManager.playerdata.currentWining.ToString("f2");
+        //if (TotalWin_text) TotalWin_text.text = SocketManager.playerdata.currentWining.ToString("f2");
 
-        if (Balance_text) Balance_text.text = SocketManager.playerdata.Balance.ToString("f2");
+        //if (Balance_text) Balance_text.text = SocketManager.playerdata.Balance.ToString("f2");
 
-        currentBalance = SocketManager.playerdata.Balance;
+        //currentBalance = SocketManager.playerdata.Balance;
 
-        if (SocketManager.resultData.jackpot > 0)
-        {
-            uiManager.PopulateWin(4, SocketManager.resultData.jackpot);
-            yield return new WaitUntil(() => !CheckPopups);
-            CheckPopups = true;
-        }
+        //if (SocketManager.resultData.jackpot > 0)
+        //{
+        //    uiManager.PopulateWin(4, SocketManager.resultData.jackpot);
+        //    yield return new WaitUntil(() => !CheckPopups);
+        //    CheckPopups = true;
+        //}
 
-        if (SocketManager.resultData.isBonus)
-        {
-            CheckBonusGame();
-        }
-        else
-        {
-            CheckWinPopups();
-        }
+        //if (SocketManager.resultData.isBonus)
+        //{
+        //    CheckBonusGame();
+        //}
+        //else
+        //{
+        //    CheckWinPopups();
+        //}
 
-        yield return new WaitUntil(() => !CheckPopups);
-        if (!IsAutoSpin && !IsFreeSpin)
-        {
+        //yield return new WaitUntil(() => !CheckPopups);
+        //if (!IsAutoSpin && !IsFreeSpin)
+        //{
             ToggleButtonGrp(true);
-            IsSpinning = false;
-        }
-        else
-        {
-            yield return new WaitForSeconds(2f);
-            IsSpinning = false;
-        }
-        if(SocketManager.resultData.freeSpins.isNewAdded)
-        {
-            if(IsFreeSpin)
-            {
-                IsFreeSpin = false;
-                if (FreeSpinRoutine != null)
-                {
-                    StopCoroutine(FreeSpinRoutine);
-                    FreeSpinRoutine = null;
-                }
-            }
-            uiManager.FreeSpinProcess((int)SocketManager.resultData.freeSpins.count);
-            if (IsAutoSpin)
-            {
-                StopAutoSpin();
-                yield return new WaitForSeconds(0.1f);
-            }
-        }
+        //    IsSpinning = false;
+        //}
+        //else
+        //{
+        //    yield return new WaitForSeconds(2f);
+        //    IsSpinning = false;
+        //}
+        //if(SocketManager.resultData.freeSpins.isNewAdded)
+        //{
+        //    if(IsFreeSpin)
+        //    {
+        //        IsFreeSpin = false;
+        //        if (FreeSpinRoutine != null)
+        //        {
+        //            StopCoroutine(FreeSpinRoutine);
+        //            FreeSpinRoutine = null;
+        //        }
+        //    }
+        //    uiManager.FreeSpinProcess((int)SocketManager.resultData.freeSpins.count);
+        //    if (IsAutoSpin)
+        //    {
+        //        StopAutoSpin();
+        //        yield return new WaitForSeconds(0.1f);
+        //    }
+        //}
     }
 
     private void BalanceDeduction()
@@ -800,6 +799,7 @@ public class SlotBehaviour : MonoBehaviour
     #region TweeningCode
     private void InitializeTweening(Transform slotTransform)
     {
+        Debug.Log("my tween height is " + tweenHeight);
         slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, 0);
         Tweener tweener = slotTransform.DOLocalMoveY(-tweenHeight, 0.2f).SetLoops(-1, LoopType.Restart).SetDelay(0);
         tweener.Play();
