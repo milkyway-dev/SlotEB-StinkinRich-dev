@@ -27,14 +27,6 @@ public class SlotBehaviour : MonoBehaviour
     [SerializeField]
     private Transform[] Slot_Transform;
 
-    [Header("Line Button Objects")]
-    [SerializeField]
-    private List<GameObject> StaticLine_Objects;
-
-    [Header("Line Button Texts")]
-    [SerializeField]
-    private List<TMP_Text> StaticLine_Texts;
-
     private Dictionary<int, string> y_string = new Dictionary<int, string>();
 
     [Header("Buttons")]
@@ -49,6 +41,10 @@ public class SlotBehaviour : MonoBehaviour
     private Button BetPlus_Button;
     [SerializeField]
     private Button BetMinus_Button;
+    [SerializeField]
+    private Button TBPlus_Button;
+    [SerializeField]
+    private Button TBMinus_Button;
 
     [Header("Animated Sprites")]
     [SerializeField]
@@ -164,9 +160,14 @@ public class SlotBehaviour : MonoBehaviour
         if (AutoSpin_Button) AutoSpin_Button.onClick.RemoveAllListeners();
         if (AutoSpin_Button) AutoSpin_Button.onClick.AddListener(AutoSpin);
 
-
         if (AutoSpinStop_Button) AutoSpinStop_Button.onClick.RemoveAllListeners();
         if (AutoSpinStop_Button) AutoSpinStop_Button.onClick.AddListener(StopAutoSpin);
+
+        if (TBPlus_Button) TBPlus_Button.onClick.RemoveAllListeners();
+        if (TBPlus_Button) TBPlus_Button.onClick.AddListener(delegate { ToggleTotalBet(true); });
+
+        if (TBMinus_Button) TBMinus_Button.onClick.RemoveAllListeners();
+        if (TBMinus_Button) TBMinus_Button.onClick.AddListener(delegate { ToggleTotalBet(false); });
 
         if (FSBoard_Object) FSBoard_Object.SetActive(false);
     }
@@ -283,8 +284,6 @@ public class SlotBehaviour : MonoBehaviour
     internal void FetchLines(string LineVal, int count)
     {
         y_string.Add(count + 1, LineVal);
-        StaticLine_Texts[count].text = (count + 1).ToString();
-        StaticLine_Objects[count].SetActive(true);
     }
 
     //Generate Static Lines from button hovers
@@ -331,6 +330,10 @@ public class SlotBehaviour : MonoBehaviour
             {
                 BetCounter++;
             }
+            else
+            {
+                BetCounter = 0;
+            }
         }
         else
         {
@@ -338,9 +341,44 @@ public class SlotBehaviour : MonoBehaviour
             {
                 BetCounter--;
             }
+            else
+            {
+                BetCounter = SocketManager.initialData.Bets.Count - 1;
+            }
         }
         if (LineBet_text) LineBet_text.text = SocketManager.initialData.Bets[BetCounter].ToString();
         if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.Bets[BetCounter] * Lines).ToString();
+        currentTotalBet = SocketManager.initialData.Bets[BetCounter] * Lines;
+        CompareBalance();
+    }
+
+    private void ToggleTotalBet(bool IncDec)
+    {
+        if (audioController) audioController.PlayButtonAudio();
+        if (IncDec)
+        {
+            if (BetCounter < SocketManager.initialData.Bets.Count - 1)
+            {
+                BetCounter++;
+            }
+            else
+            {
+                BetCounter = 0;
+            }
+        }
+        else
+        {
+            if (BetCounter > 0)
+            {
+                BetCounter--;
+            }
+            else
+            {
+                BetCounter = SocketManager.initialData.Bets.Count - 1;
+            }
+        }
+        if (LineBet_text) LineBet_text.text = SocketManager.initialData.Bets[BetCounter].ToString();
+        if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.Bets[BetCounter] * Lines).ToString("f2");
         currentTotalBet = SocketManager.initialData.Bets[BetCounter] * Lines;
         CompareBalance();
     }
@@ -360,9 +398,9 @@ public class SlotBehaviour : MonoBehaviour
     {
         for (int i = 0; i < Tempimages.Count; i++)
         {
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < 5; j++)
             {
-                int randomIndex = UnityEngine.Random.Range(0, 14);
+                int randomIndex = UnityEngine.Random.Range(0, 11);
                 Tempimages[i].slotImages[j].sprite = myImages[randomIndex];
             }
         }
@@ -549,19 +587,19 @@ public class SlotBehaviour : MonoBehaviour
         {
             BalanceDeduction();
         }
-        //SocketManager.AccumulateResult(BetCounter);
+        SocketManager.AccumulateResult(BetCounter);
 
-        //yield return new WaitUntil(() => SocketManager.isResultdone);
+        yield return new WaitUntil(() => SocketManager.isResultdone);
 
-        //for (int j = 0; j < SocketManager.resultData.ResultReel.Count; j++)
-        //{
-        //    List<int> resultnum = SocketManager.resultData.FinalResultReel[j]?.Split(',')?.Select(Int32.Parse)?.ToList();
-        //    for (int i = 0; i < 5; i++)
-        //    {
-        //        if (images[i].slotImages[images[i].slotImages.Count - 5 + j]) images[i].slotImages[images[i].slotImages.Count - 5 + j].sprite = myImages[resultnum[i]];
-        //        PopulateAnimationSprites(images[i].slotImages[images[i].slotImages.Count - 5 + j].gameObject.GetComponent<ImageAnimation>(), resultnum[i]);
-        //    }
-        //}
+        for (int j = 0; j < SocketManager.resultData.ResultReel.Count; j++)
+        {
+            List<int> resultnum = SocketManager.resultData.FinalResultReel[j]?.Split(',')?.Select(Int32.Parse)?.ToList();
+            for (int i = 0; i < 5; i++)
+            {
+                if (images[i].slotImages[images[i].slotImages.Count - 5 + j]) images[i].slotImages[images[i].slotImages.Count - 5 + j].sprite = myImages[resultnum[i]];
+                //PopulateAnimationSprites(images[i].slotImages[images[i].slotImages.Count - 5 + j].gameObject.GetComponent<ImageAnimation>(), resultnum[i]);
+            }
+        }
 
         yield return new WaitForSeconds(0.5f);
 
@@ -773,6 +811,8 @@ public class SlotBehaviour : MonoBehaviour
         if (AutoSpin_Button) AutoSpin_Button.interactable = toggle;
         if (BetMinus_Button) BetMinus_Button.interactable = toggle;
         if (BetPlus_Button) BetPlus_Button.interactable = toggle;
+        if (TBPlus_Button) TBPlus_Button.interactable = toggle;
+        if (TBMinus_Button) TBMinus_Button.interactable = toggle;
 
     }
 
@@ -799,9 +839,8 @@ public class SlotBehaviour : MonoBehaviour
     #region TweeningCode
     private void InitializeTweening(Transform slotTransform)
     {
-        Debug.Log("my tween height is " + tweenHeight);
         slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, 0);
-        Tweener tweener = slotTransform.DOLocalMoveY(-tweenHeight, 0.2f).SetLoops(-1, LoopType.Restart).SetDelay(0);
+        Tweener tweener = slotTransform.DOLocalMoveY(-tweenHeight, 0.2f).SetLoops(-1, LoopType.Restart).SetDelay(0).SetEase(Ease.Linear);
         tweener.Play();
         alltweens.Add(tweener);
     }

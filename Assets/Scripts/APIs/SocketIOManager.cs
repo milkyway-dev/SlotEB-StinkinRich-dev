@@ -28,13 +28,15 @@ public class SocketIOManager : MonoBehaviour
     private SocketManager manager;
 
     protected string SocketURI = null;
-    protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
+    //protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
     //protected string TestSocketURI = "https://7p68wzhv-5000.inc1.devtunnels.ms/";
+    protected string TestSocketURI = "https://6f01c04j-5000.inc1.devtunnels.ms/";
 
     [SerializeField]
     private string testToken;
 
-    protected string gameID = "SL-VIK";
+    //protected string gameID = "SL-SR";
+    protected string gameID = "";
 
     internal bool isLoaded = false;
 
@@ -275,9 +277,7 @@ public class SocketIOManager : MonoBehaviour
                     {
                         Debug.Log(jsonObject);
                         List<string> LinesString = ConvertListListIntToListString(initialData.Lines);
-                        List<string> InitialReels = ConvertListOfListsToStrings(initialData.Reel);
-                        InitialReels = RemoveQuotes(InitialReels);
-                        PopulateSlotSocket(InitialReels, LinesString);
+                        PopulateSlotSocket(LinesString);
                         SetInit = true;
                     }
                     else
@@ -314,7 +314,7 @@ public class SocketIOManager : MonoBehaviour
         uiManager.InitialiseUIData(initUIData.AbtLogo.link, initUIData.AbtLogo.logoSprite, initUIData.ToULink, initUIData.PopLink, initUIData.paylines);
     }
 
-    private void PopulateSlotSocket(List<string> slotPop, List<string> LineIds)
+    private void PopulateSlotSocket(List<string> LineIds)
     {
         slotManager.shuffleInitialMatrix();
         for (int i = 0; i < LineIds.Count; i++)
@@ -335,7 +335,7 @@ public class SocketIOManager : MonoBehaviour
         message.data = new BetData();
         message.data.currentBet = currBet;
         message.data.spins = 1;
-        message.data.currentLines = 20;
+        message.data.currentLines = 100;
         message.id = "SPIN";
         // Serialize message data to JSON
         string json = JsonUtility.ToJson(message);
@@ -453,7 +453,6 @@ public class AbtLogo
 [Serializable]
 public class GameData
 {
-    public List<List<string>> Reel { get; set; }
     public List<List<int>> Lines { get; set; }
     public List<double> Bets { get; set; }
     public bool canSwitchLines { get; set; }
