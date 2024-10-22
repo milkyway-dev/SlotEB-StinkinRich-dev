@@ -9,11 +9,14 @@ public class PayoutCalculation : MonoBehaviour
     private int x_Distance;
     [SerializeField]
     private int y_Distance;
+    [SerializeField]
+    private Material[] LineMats;
 
     [SerializeField]
     private Transform LineContainer;
     [SerializeField]
     private GameObject Line_Prefab;
+    internal List<int> DontDestroyLines = new List<int>();
 
     [SerializeField]
     private Vector2 InitialLinePosition = new Vector2(-315, 100);
@@ -21,11 +24,12 @@ public class PayoutCalculation : MonoBehaviour
     GameObject TempObj = null;
 
     //generate lines at runtime accordingly
-    internal void GeneratePayoutLinesBackend(List<int> y_index, int Count, bool isStatic = false)
+    internal void GeneratePayoutLinesBackend(List<int> y_index, int Count, int matCount = 0, bool isStatic = false)
     {
         GameObject MyLineObj = Instantiate(Line_Prefab, LineContainer);
         MyLineObj.transform.localPosition = new Vector2(InitialLinePosition.x, InitialLinePosition.y);
         UILineRenderer MyLine = MyLineObj.GetComponent<UILineRenderer>();
+        MyLine.material = LineMats[matCount];
         for (int i = 0; i < Count; i++)
         {
             var points = new Vector2() { x = i * x_Distance, y = y_index[i] * -y_Distance };
