@@ -50,7 +50,7 @@ public class ImageAnimation : MonoBehaviour
 
     private void OnEnable()
     {
-        if (StartOnAwake)
+        if (StartOnAwake && textureArray.Count > 0) 
         {
             StartAnimation();
         }

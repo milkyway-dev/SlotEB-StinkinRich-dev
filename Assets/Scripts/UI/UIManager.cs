@@ -173,6 +173,36 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Button CrossQuit_Button;
 
+    [Header("Squirrel Animation")]
+    [SerializeField]
+    private GameObject SquirrelStanding_Object;
+    [SerializeField]
+    private GameObject SquirrelCoins_Object;
+
+    [Header("KTR Elements")]
+    [SerializeField]
+    private GameObject SlotMainKTR_Object;
+    [SerializeField]
+    private GameObject FGSetupKTR_Object;
+    [SerializeField]
+    private GameObject ButtonSetupKTR_Object;
+
+    [Header("Normal Elements")]
+    [SerializeField]
+    private GameObject SlotMain_Object;
+    [SerializeField]
+    private GameObject FGSetup_Object;
+    [SerializeField]
+    private GameObject ButtonSetup_Object;
+
+    [Header("Locker Setup")]
+    [SerializeField]
+    private GameObject LockerMain_Object;
+    [SerializeField]
+    private GameObject LockerOpen_Object;
+    [SerializeField]
+    private GameObject LockerClose_Object;
+
     [SerializeField]
     private AudioController audioController;
 
@@ -355,12 +385,49 @@ public class UIManager : MonoBehaviour
         slotManager.FreeSpin(spins);
     }
 
-    internal void FreeSpinProcess(int spins)
+    internal void FreeSpinProcessStart(int spins)
     {
+        ToggleKTR(true);
         FreeSpins = spins;
         if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(true);
         if (Free_Text) Free_Text.text = spins.ToString() + " Free spins awarded.";
         if (MainPopup_Object) MainPopup_Object.SetActive(true);
+    }
+
+    private void ToggleKTR(bool isActive)
+    {
+        if(isActive)
+        {
+            if (LockerMain_Object) LockerMain_Object.SetActive(true);
+            if (LockerOpen_Object) LockerOpen_Object.SetActive(true);
+            if (SlotMainKTR_Object) SlotMainKTR_Object.SetActive(true);
+            if (FGSetupKTR_Object) FGSetupKTR_Object.SetActive(true);
+            if (ButtonSetupKTR_Object) ButtonSetupKTR_Object.SetActive(true);
+            if (SlotMain_Object) SlotMain_Object.SetActive(false);
+            if (FGSetup_Object) FGSetup_Object.SetActive(false);
+            if (ButtonSetup_Object) ButtonSetup_Object.SetActive(false);
+            DOVirtual.DelayedCall(2f, () =>
+            {
+                if (LockerOpen_Object) LockerOpen_Object.SetActive(false);
+                if (LockerMain_Object) LockerMain_Object.SetActive(false);
+            });
+        }
+        else
+        {
+            if (LockerMain_Object) LockerMain_Object.SetActive(true);
+            if (LockerClose_Object) LockerClose_Object.SetActive(true);
+            if (SlotMainKTR_Object) SlotMainKTR_Object.SetActive(false);
+            if (FGSetupKTR_Object) FGSetupKTR_Object.SetActive(false);
+            if (ButtonSetupKTR_Object) ButtonSetupKTR_Object.SetActive(false);
+            if (SlotMain_Object) SlotMain_Object.SetActive(true);
+            if (FGSetup_Object) FGSetup_Object.SetActive(true);
+            if (ButtonSetup_Object) ButtonSetup_Object.SetActive(true);
+            DOVirtual.DelayedCall(2f, () =>
+            {
+                if (LockerClose_Object) LockerClose_Object.SetActive(false);
+                if (LockerMain_Object) LockerMain_Object.SetActive(false);
+            });
+        }
     }
 
     private void StartPopupAnim(double amount)
@@ -586,6 +653,20 @@ public class UIManager : MonoBehaviour
         else
         {
             Debug.LogError("Error downloading image: " + request.error);
+        }
+    }
+
+    internal void ToggleSquirrel(bool isActive)
+    {
+        if (!isActive)
+        {
+            if (SquirrelCoins_Object) SquirrelCoins_Object.SetActive(true);
+            if (SquirrelStanding_Object) SquirrelStanding_Object.SetActive(false);
+        }
+        else
+        {
+            if (SquirrelCoins_Object) SquirrelCoins_Object.SetActive(false);
+            if (SquirrelStanding_Object) SquirrelStanding_Object.SetActive(true);
         }
     }
 }
