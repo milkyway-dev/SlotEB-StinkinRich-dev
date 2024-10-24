@@ -31,7 +31,8 @@ public class SocketIOManager : MonoBehaviour
     protected string SocketURI = null;
     //protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
     //protected string TestSocketURI = "https://7p68wzhv-5000.inc1.devtunnels.ms/";
-    protected string TestSocketURI = "https://6f01c04j-5000.inc1.devtunnels.ms/";
+    //protected string TestSocketURI = "https://6f01c04j-5000.inc1.devtunnels.ms/";
+    protected string TestSocketURI = "https://c4xfw9cd-5002.inc1.devtunnels.ms/";
 
     [SerializeField]
     private string testToken;
@@ -273,7 +274,6 @@ public class SocketIOManager : MonoBehaviour
                     initialData = myData.message.GameData;
                     initUIData = myData.message.UIData;
                     playerdata = myData.message.PlayerData;
-                    bonusdata = myData.message.BonusData;
                     LineData = myData.message.GameData.Lines;
                     if (!SetInit)
                     {
@@ -313,7 +313,7 @@ public class SocketIOManager : MonoBehaviour
 
     private void RefreshUI()
     {
-        uiManager.InitialiseUIData(initUIData.AbtLogo.link, initUIData.AbtLogo.logoSprite, initUIData.ToULink, initUIData.PopLink, initUIData.paylines);
+        uiManager.InitialiseUIData(initUIData.paylines);
     }
 
     private void PopulateSlotSocket(List<string> LineIds)
@@ -446,36 +446,20 @@ public class InitData
 }
 
 [Serializable]
-public class AbtLogo
-{
-    public string logoSprite { get; set; }
-    public string link { get; set; }
-}
-
-[Serializable]
 public class GameData
 {
     public List<List<int>> Lines { get; set; }
     public List<double> Bets { get; set; }
-    public bool canSwitchLines { get; set; }
-    public List<int> LinesCount { get; set; }
-    public List<int> autoSpin { get; set; }
     public List<List<string>> ResultReel { get; set; }
     public List<int> linesToEmit { get; set; }
     public List<List<string>> symbolsToEmit { get; set; }
     public double WinAmout { get; set; }
-    public FreeSpins freeSpins { get; set; }
     public List<string> FinalsymbolsToEmit { get; set; }
     public List<string> FinalResultReel { get; set; }
     public double jackpot { get; set; }
     public bool isBonus { get; set; }
     public double BonusStopIndex { get; set; }
-}
-
-[Serializable]
-public class FreeSpins
-{
-    public int count { get; set; }
+    public int freeSpinCount { get; set; }
     public bool isNewAdded { get; set; }
 }
 
@@ -500,9 +484,6 @@ public class UIData
 {
     public Paylines paylines { get; set; }
     public List<string> spclSymbolTxt { get; set; }
-    public AbtLogo AbtLogo { get; set; }
-    public string ToULink { get; set; }
-    public string PopLink { get; set; }
 }
 
 [Serializable]
@@ -527,20 +508,33 @@ public class Symbol
     [OnDeserialized]
     internal void OnDeserializedMethod(StreamingContext context)
     {
-        // Handle the case where multiplier is an object (empty in JSON)
-        if (MultiplierObject is JObject)
+        if (MultiplierObject == null)
         {
+            // If the multiplier is null in the JSON, set an empty list
+            Multiplier = new List<List<int>>();
+        }
+        else if (MultiplierObject is JObject)
+        {
+            // If the multiplier is an empty object ({}), treat it as an empty list
             Multiplier = new List<List<int>>();
         }
         else
         {
-            // Deserialize normally assuming it's an array of arrays
-            Multiplier = JsonConvert.DeserializeObject<List<List<int>>>(MultiplierObject.ToString());
+            try
+            {
+                // Attempt to deserialize the multiplier object as a list of lists of integers
+                Multiplier = JsonConvert.DeserializeObject<List<List<int>>>(MultiplierObject.ToString());
+            }
+            catch (Exception ex)
+            {
+                // Handle unexpected format or deserialization errors
+                Debug.Log($"Deserialization error: {ex.Message}");
+                Multiplier = new List<List<int>>(); // Fallback to an empty list on error
+            }
         }
     }
     public object defaultAmount { get; set; }
     public object symbolsCount { get; set; }
-    public object increaseValue { get; set; }
     public object description { get; set; }
     public int freeSpin { get; set; }
 }

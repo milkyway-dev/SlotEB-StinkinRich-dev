@@ -33,10 +33,6 @@ public class UIManager : MonoBehaviour
     private GameObject Settings_Object;
     [SerializeField]
     private RectTransform Settings_RT;
-    [SerializeField]
-    private Button Terms_Button;
-    [SerializeField]
-    private Button Privacy_Button;
 
     [SerializeField]
     private Button Exit_Button;
@@ -55,16 +51,6 @@ public class UIManager : MonoBehaviour
     [Header("Popus UI")]
     [SerializeField]
     private GameObject MainPopup_Object;
-
-    [Header("About Popup")]
-    [SerializeField]
-    private GameObject AboutPopup_Object;
-    [SerializeField]
-    private Button AboutExit_Button;
-    [SerializeField]
-    private Image AboutLogo_Image;
-    [SerializeField]
-    private Button Support_Button;
 
     [Header("Paytable Popup")]
     [SerializeField]
@@ -111,21 +97,11 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Sprite MegaWin_Sprite;
     [SerializeField]
-    private Sprite Jackpot_Sprite;
-    [SerializeField]
     private Image Win_Image;
     [SerializeField]
     private GameObject WinPopup_Object;
     [SerializeField]
     private TMP_Text Win_Text;
-
-    [Header("FreeSpins Popup")]
-    [SerializeField]
-    private GameObject FreeSpinPopup_Object;
-    [SerializeField]
-    private TMP_Text Free_Text;
-    [SerializeField]
-    private Button FreeSpin_Button;
 
     [Header("Splash Screen")]
     [SerializeField]
@@ -186,6 +162,14 @@ public class UIManager : MonoBehaviour
     private GameObject FGSetupKTR_Object;
     [SerializeField]
     private GameObject ButtonSetupKTR_Object;
+    [SerializeField]
+    private TMP_Text TotalBetKTR_Text;
+    [SerializeField]
+    private TMP_Text BonusWinKTR_Text;
+    [SerializeField]
+    private TMP_Text FreeSpinKTR_Text;
+    [SerializeField]
+    private GameObject SlotBgSetupKTR_Object;
 
     [Header("Normal Elements")]
     [SerializeField]
@@ -194,6 +178,8 @@ public class UIManager : MonoBehaviour
     private GameObject FGSetup_Object;
     [SerializeField]
     private GameObject ButtonSetup_Object;
+    [SerializeField]
+    private GameObject SlotBGSetup_Object;
 
     [Header("Locker Setup")]
     [SerializeField]
@@ -271,12 +257,6 @@ public class UIManager : MonoBehaviour
         if (Exit_Button) Exit_Button.onClick.RemoveAllListeners();
         if (Exit_Button) Exit_Button.onClick.AddListener(CloseMenu);
 
-        //if (About_Button) About_Button.onClick.RemoveAllListeners();
-        //if (About_Button) About_Button.onClick.AddListener(delegate { OpenPopup(AboutPopup_Object); });
-
-        if (AboutExit_Button) AboutExit_Button.onClick.RemoveAllListeners();
-        if (AboutExit_Button) AboutExit_Button.onClick.AddListener(delegate { ClosePopup(AboutPopup_Object); });
-
         if (Paytable_Button) Paytable_Button.onClick.RemoveAllListeners();
         if (Paytable_Button) Paytable_Button.onClick.AddListener(delegate { OpenPopup(PaytablePopup_Object); });
 
@@ -316,9 +296,6 @@ public class UIManager : MonoBehaviour
         if (CloseAD_Button) CloseAD_Button.onClick.RemoveAllListeners();
         if (CloseAD_Button) CloseAD_Button.onClick.AddListener(CallOnExitFunction);
 
-        if (FreeSpin_Button) FreeSpin_Button.onClick.RemoveAllListeners();
-        if (FreeSpin_Button) FreeSpin_Button.onClick.AddListener(delegate{ StartFreeSpins(FreeSpins); });
-
         if (QuitSplash_button) QuitSplash_button.onClick.RemoveAllListeners();
         if (QuitSplash_button) QuitSplash_button.onClick.AddListener(delegate { OpenPopup(QuitPopup_Object); });
 
@@ -342,15 +319,6 @@ public class UIManager : MonoBehaviour
 
     internal void DisconnectionPopup(bool isReconnection)
     {
-        //if(isReconnection)
-        //{
-        //    OpenPopup(ReconnectPopup_Object);
-        //}
-        //else
-        //{
-        //    ClosePopup(ReconnectPopup_Object);
-        //}
-
         if (!isExit)
         {
             OpenPopup(DisconnectPopup_Object);
@@ -370,28 +338,20 @@ public class UIManager : MonoBehaviour
             case 3:
                 if (Win_Image) Win_Image.sprite = MegaWin_Sprite;
                 break;
-            case 4:
-                if (Win_Image) Win_Image.sprite = Jackpot_Sprite;
-                break;
         }
 
         StartPopupAnim(amount);
-    }
-
-    private void StartFreeSpins(int spins)
-    {
-        if (MainPopup_Object) MainPopup_Object.SetActive(false);
-        if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(false);
-        slotManager.FreeSpin(spins);
     }
 
     internal void FreeSpinProcessStart(int spins)
     {
         ToggleKTR(true);
         FreeSpins = spins;
-        if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(true);
-        if (Free_Text) Free_Text.text = spins.ToString() + " Free spins awarded.";
-        if (MainPopup_Object) MainPopup_Object.SetActive(true);
+    }
+
+    internal void FreeSpinProcessStop()
+    {
+        ToggleKTR(false);
     }
 
     private void ToggleKTR(bool isActive)
@@ -402,10 +362,12 @@ public class UIManager : MonoBehaviour
             if (LockerOpen_Object) LockerOpen_Object.SetActive(true);
             if (SlotMainKTR_Object) SlotMainKTR_Object.SetActive(true);
             if (FGSetupKTR_Object) FGSetupKTR_Object.SetActive(true);
+            if (SlotBgSetupKTR_Object) SlotBgSetupKTR_Object.SetActive(true);
             if (ButtonSetupKTR_Object) ButtonSetupKTR_Object.SetActive(true);
             if (SlotMain_Object) SlotMain_Object.SetActive(false);
             if (FGSetup_Object) FGSetup_Object.SetActive(false);
             if (ButtonSetup_Object) ButtonSetup_Object.SetActive(false);
+            if (SlotBGSetup_Object) SlotBGSetup_Object.SetActive(false);
             DOVirtual.DelayedCall(2f, () =>
             {
                 if (LockerOpen_Object) LockerOpen_Object.SetActive(false);
@@ -453,18 +415,8 @@ public class UIManager : MonoBehaviour
         OpenPopup(ADPopup_Object); 
     }
 
-    internal void InitialiseUIData(string SupportUrl, string AbtImgUrl, string TermsUrl, string PrivacyUrl, Paylines symbolsText)
+    internal void InitialiseUIData(Paylines symbolsText)
     {
-        if (Support_Button) Support_Button.onClick.RemoveAllListeners();
-        if (Support_Button) Support_Button.onClick.AddListener(delegate { UrlButtons(SupportUrl); });
-
-        if (Terms_Button) Terms_Button.onClick.RemoveAllListeners();
-        if (Terms_Button) Terms_Button.onClick.AddListener(delegate { UrlButtons(TermsUrl); });
-
-        if (Privacy_Button) Privacy_Button.onClick.RemoveAllListeners();
-        if (Privacy_Button) Privacy_Button.onClick.AddListener(delegate { UrlButtons(PrivacyUrl); });
-
-        StartCoroutine(DownloadImage(AbtImgUrl));
         PopulateSymbolsPayout(symbolsText);
     }
 
@@ -629,30 +581,6 @@ public class UIManager : MonoBehaviour
             if (SoundOff_Object) SoundOff_Object.SetActive(true);
             if(audioController) audioController.ToggleMute(true,"button");
             if (audioController) audioController.ToggleMute(true,"wl");
-        }
-    }
-
-    private IEnumerator DownloadImage(string url)
-    {
-        // Create a UnityWebRequest object to download the image
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
-
-        // Wait for the download to complete
-        yield return request.SendWebRequest();
-
-        // Check for errors
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            Texture2D texture = DownloadHandlerTexture.GetContent(request);
-
-            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-
-            // Apply the sprite to the target image
-            AboutLogo_Image.sprite = sprite;
-        }
-        else
-        {
-            Debug.LogError("Error downloading image: " + request.error);
         }
     }
 
