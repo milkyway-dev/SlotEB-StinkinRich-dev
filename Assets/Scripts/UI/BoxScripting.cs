@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class BoxScripting : MonoBehaviour
 {
     internal bool isAnim = false;
+    internal bool isBonus = false;
+    internal bool isScatter = false;
     [SerializeField]
     private Image BoxBg_Image;
     [SerializeField]

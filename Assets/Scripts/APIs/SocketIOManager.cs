@@ -21,10 +21,9 @@ public class SocketIOManager : MonoBehaviour
     internal GameData resultData = null;
     internal PlayerData playerdata = null;
     internal List<List<int>> LineData = null;
-    [SerializeField]
-    internal List<string> bonusdata = null;
     //WebSocket currentSocket = null;
     internal bool isResultdone = false;
+    internal BonusData tempBonus;
 
     private SocketManager manager;
 
@@ -32,7 +31,8 @@ public class SocketIOManager : MonoBehaviour
     //protected string TestSocketURI = "https://game-crm-rtp-backend.onrender.com/";
     //protected string TestSocketURI = "https://7p68wzhv-5000.inc1.devtunnels.ms/";
     //protected string TestSocketURI = "https://6f01c04j-5000.inc1.devtunnels.ms/";
-    protected string TestSocketURI = "https://c4xfw9cd-5002.inc1.devtunnels.ms/";
+    //protected string TestSocketURI = "https://c4xfw9cd-5002.inc1.devtunnels.ms/";
+    protected string TestSocketURI = "http://localhost:5000/";
 
     [SerializeField]
     private string testToken;
@@ -296,6 +296,7 @@ public class SocketIOManager : MonoBehaviour
                     resultData = myData.message.GameData;
                     playerdata = myData.message.PlayerData;
                     isResultdone = true;
+                    tempBonus = myData.message.GameData.bonusData;
                     break;
                 }
             case "ExitUser":
@@ -456,11 +457,26 @@ public class GameData
     public double WinAmout { get; set; }
     public List<string> FinalsymbolsToEmit { get; set; }
     public List<string> FinalResultReel { get; set; }
-    public double jackpot { get; set; }
+    public FreeSpin freeSpin { get; set; }
+    public BonusData bonusData { get; set; }
+    public List<string> scatterWinningSymbols { get; set; }
+}
+
+[Serializable]
+public class BonusData
+{
     public bool isBonus { get; set; }
-    public double BonusStopIndex { get; set; }
-    public int freeSpinCount { get; set; }
+    public int bonusWin { get; set; }
+    public List<int> shuffledBonusValues { get; set; }
+    public int selectedBonusMultiplier { get; set; }
+    public List<string> trashForCashWinningSymbols { get; set; }
+}
+
+[Serializable]
+public class FreeSpin
+{
     public bool isNewAdded { get; set; }
+    public int freeSpinCount { get; set; }
 }
 
 [Serializable]
@@ -469,7 +485,6 @@ public class Message
     public GameData GameData { get; set; }
     public UIData UIData { get; set; }
     public PlayerData PlayerData { get; set; }
-    public List<string> BonusData { get; set; }
 }
 
 [Serializable]

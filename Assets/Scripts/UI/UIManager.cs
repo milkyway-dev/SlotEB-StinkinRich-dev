@@ -1,53 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
-using System.Linq;
 using TMPro;
-using System;
-using UnityEngine.Networking;
 
 public class UIManager : MonoBehaviour
 {
-
-    [Header("Menu UI")]
-    [SerializeField]
-    private Button Menu_Button;
-    [SerializeField]
-    private GameObject Menu_Object;
-    [SerializeField]
-    private RectTransform Menu_RT;
-
-    //[SerializeField]
-    //private Button About_Button;
-    //[SerializeField]
-    //private GameObject About_Object;
-    //[SerializeField]
-    //private RectTransform About_RT;
-
-    [Header("Settings UI")]
-    [SerializeField]
-    private Button Settings_Button;
-    [SerializeField]
-    private GameObject Settings_Object;
-    [SerializeField]
-    private RectTransform Settings_RT;
-
-    [SerializeField]
-    private Button Exit_Button;
-    [SerializeField]
-    private GameObject Exit_Object;
-    [SerializeField]
-    private RectTransform Exit_RT;
-
-    [SerializeField]
-    private Button Paytable_Button;
-    [SerializeField]
-    private GameObject Paytable_Object;
-    [SerializeField]
-    private RectTransform Paytable_RT;
-
     [Header("Popus UI")]
     [SerializeField]
     private GameObject MainPopup_Object;
@@ -102,6 +60,26 @@ public class UIManager : MonoBehaviour
     private GameObject WinPopup_Object;
     [SerializeField]
     private TMP_Text Win_Text;
+
+    [Header("Free Spin Popup")]
+    [SerializeField]
+    private GameObject FreeSpinPopup_Object;
+    [SerializeField]
+    private TMP_Text FS_Text;
+    [SerializeField]
+    private Image FS_Image;
+    [SerializeField]
+    private Image FSTitle_Image;
+
+    [Header("Free Spin Complete Popup")]
+    [SerializeField]
+    private GameObject FreeSpinCompletePopup_Object;
+    [SerializeField]
+    private TMP_Text FSComplete_Text;
+    [SerializeField]
+    private TMP_Text FSNum_Text;
+    [SerializeField]
+    private Image FSComplete_Image;
 
     [Header("Splash Screen")]
     [SerializeField]
@@ -189,6 +167,13 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject LockerClose_Object;
 
+    [Header("Bonus Routine Text")]
+    [SerializeField]
+    private TMP_Text BonusRoutine_Text;
+    [SerializeField]
+    private GameObject BonusRoutine_GameObject;
+    private Tween BonusTextTween = null;
+
     [SerializeField]
     private AudioController audioController;
 
@@ -204,8 +189,7 @@ public class UIManager : MonoBehaviour
     private bool isMusic = true;
     private bool isSound = true;
     private bool isExit = false;
-
-    private int FreeSpins;
+    private double BonusWin = 0;
 
 
     private void Awake()
@@ -250,22 +234,6 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-
-        if (Menu_Button) Menu_Button.onClick.RemoveAllListeners();
-        if (Menu_Button) Menu_Button.onClick.AddListener(OpenMenu);
-
-        if (Exit_Button) Exit_Button.onClick.RemoveAllListeners();
-        if (Exit_Button) Exit_Button.onClick.AddListener(CloseMenu);
-
-        if (Paytable_Button) Paytable_Button.onClick.RemoveAllListeners();
-        if (Paytable_Button) Paytable_Button.onClick.AddListener(delegate { OpenPopup(PaytablePopup_Object); });
-
-        if (PaytableExit_Button) PaytableExit_Button.onClick.RemoveAllListeners();
-        if (PaytableExit_Button) PaytableExit_Button.onClick.AddListener(delegate { ClosePopup(PaytablePopup_Object); });
-
-        if (Settings_Button) Settings_Button.onClick.RemoveAllListeners();
-        if (Settings_Button) Settings_Button.onClick.AddListener(delegate { OpenPopup(SettingsPopup_Object); });
-
         if (SettingsExit_Button) SettingsExit_Button.onClick.RemoveAllListeners();
         if (SettingsExit_Button) SettingsExit_Button.onClick.AddListener(delegate { ClosePopup(SettingsPopup_Object); });
 
@@ -343,15 +311,81 @@ public class UIManager : MonoBehaviour
         StartPopupAnim(amount);
     }
 
-    internal void FreeSpinProcessStart(int spins)
+    internal void FreeSpinProcessStart(int spins, double totalbet, bool isUpdate = false)
     {
-        ToggleKTR(true);
-        FreeSpins = spins;
+        if (isUpdate)
+        {
+            ToggleKTR(true);
+            if (TotalBetKTR_Text) TotalBetKTR_Text.text = totalbet.ToString();
+            if (BonusWinKTR_Text) BonusWinKTR_Text.text = "0.00";
+        }
+        if (FreeSpinKTR_Text) FreeSpinKTR_Text.text = spins.ToString();
+        ShowPopupProcess(spins, isUpdate);
+    }
+
+    internal void UpdateUI(int freeSpins, double CurrentWin)
+    {
+        BonusWin += CurrentWin;
+        if (FreeSpinKTR_Text) FreeSpinKTR_Text.text = freeSpins.ToString();
+        if (BonusWinKTR_Text) BonusWinKTR_Text.text = BonusWin.ToString();
     }
 
     internal void FreeSpinProcessStop()
     {
-        ToggleKTR(false);
+        if (FSComplete_Image) FSComplete_Image.color = new Color(FSComplete_Image.color.r, FSComplete_Image.color.g, FSComplete_Image.color.b, 0f);
+        if (FSComplete_Text) FSComplete_Text.color = new Color(FSComplete_Text.color.r, FSComplete_Text.color.g, FSComplete_Text.color.b, 0f);
+        if (FSNum_Text) FSNum_Text.color = new Color(FSNum_Text.color.r, FSNum_Text.color.g, FSNum_Text.color.b, 0f);
+        if (FSNum_Text) FSNum_Text.text = BonusWinKTR_Text.text;
+        if (FreeSpinCompletePopup_Object) FreeSpinCompletePopup_Object.SetActive(true);
+        if (MainPopup_Object) MainPopup_Object.SetActive(true);
+        if (FSComplete_Image) FSComplete_Image.DOFade(1f, 1f);
+        if (FSComplete_Text) FSComplete_Text.DOFade(1f, 1f);
+        if (FSNum_Text) FSNum_Text.DOFade(1f, 1f);
+        DOVirtual.DelayedCall(4f, () =>
+        {
+            if (FreeSpinCompletePopup_Object) FreeSpinCompletePopup_Object.SetActive(false);
+            if (MainPopup_Object) MainPopup_Object.SetActive(false);
+            ToggleKTR(false);
+        });
+    }
+
+    internal void ToggleBonusRText(bool isActive)
+    {
+        if (isActive)
+        {
+            if (BonusRoutine_GameObject) BonusRoutine_GameObject.SetActive(true);
+            if (BonusRoutine_Text) BonusTextTween = BonusRoutine_Text.DOFade(0f, 2f).SetLoops(-1, LoopType.Yoyo);
+        }
+        else
+        {
+            BonusTextTween.Kill();
+            if (BonusRoutine_GameObject) BonusRoutine_GameObject.SetActive(false);
+        }
+    }
+
+    private void ShowPopupProcess(int freeSpins, bool isBegin)
+    {
+        float time = 2f;
+        if(isBegin)
+        {
+            time = 5f;
+        }
+        if (FS_Text) FS_Text.text = "You have been awarded with <size=100><color=green>" + freeSpins + "</color></size> extra free spins";
+        if (FS_Image) FS_Image.color = FS_Image.color = new Color(FS_Image.color.r, FS_Image.color.g, FS_Image.color.b, 1f); 
+        if (FSTitle_Image) FSTitle_Image.color = FSTitle_Image.color = new Color(FSTitle_Image.color.r, FSTitle_Image.color.g, FSTitle_Image.color.b, 1f); 
+        if (FS_Text) FS_Text.color = FS_Text.color = new Color(FS_Text.color.r, FS_Text.color.g, FS_Text.color.b, 1f);
+        if (MainPopup_Object) MainPopup_Object.SetActive(true);
+        if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(true);
+        DOVirtual.DelayedCall(time, () =>
+        {
+            if (FS_Image) FS_Image.DOFade(0f, 1f).OnComplete(delegate
+            {
+                if (MainPopup_Object) MainPopup_Object.SetActive(false);
+                if (FreeSpinPopup_Object) FreeSpinPopup_Object.SetActive(false);
+            });
+            if (FSTitle_Image) FSTitle_Image.DOFade(0f, 1f);
+            if (FS_Text) FS_Text.DOFade(0f, 1f);
+        });
     }
 
     private void ToggleKTR(bool isActive)
@@ -384,6 +418,8 @@ public class UIManager : MonoBehaviour
             if (SlotMain_Object) SlotMain_Object.SetActive(true);
             if (FGSetup_Object) FGSetup_Object.SetActive(true);
             if (ButtonSetup_Object) ButtonSetup_Object.SetActive(true);
+            if (SlotBGSetup_Object) SlotBGSetup_Object.SetActive(true);
+            if (SlotBgSetupKTR_Object) SlotBgSetupKTR_Object.SetActive(false);
             DOVirtual.DelayedCall(2f, () =>
             {
                 if (LockerClose_Object) LockerClose_Object.SetActive(false);
@@ -470,60 +506,6 @@ public class UIManager : MonoBehaviour
         isExit = true;
         audioController.PlayButtonAudio();
         slotManager.CallCloseSocket();
-    }
-
-    private void OpenMenu()
-    {
-        audioController.PlayButtonAudio();
-        if (Menu_Object) Menu_Object.SetActive(false);
-        if (Exit_Object) Exit_Object.SetActive(true);
-        //if (About_Object) About_Object.SetActive(true);
-        if (Paytable_Object) Paytable_Object.SetActive(true);
-        if (Settings_Object) Settings_Object.SetActive(true);
-
-        //DOTween.To(() => About_RT.anchoredPosition, (val) => About_RT.anchoredPosition = val, new Vector2(About_RT.anchoredPosition.x, About_RT.anchoredPosition.y + 150), 0.1f).OnUpdate(() =>
-        //{
-        //    LayoutRebuilder.ForceRebuildLayoutImmediate(About_RT);
-        //});
-
-        DOTween.To(() => Paytable_RT.anchoredPosition, (val) => Paytable_RT.anchoredPosition = val, new Vector2(Paytable_RT.anchoredPosition.x, Paytable_RT.anchoredPosition.y + 125), 0.1f).OnUpdate(() =>
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(Paytable_RT);
-        });
-
-        DOTween.To(() => Settings_RT.anchoredPosition, (val) => Settings_RT.anchoredPosition = val, new Vector2(Settings_RT.anchoredPosition.x, Settings_RT.anchoredPosition.y + 250), 0.1f).OnUpdate(() =>
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(Settings_RT);
-        });
-    }
-
-    private void CloseMenu()
-    {
-
-        if (audioController) audioController.PlayButtonAudio();
-        //DOTween.To(() => About_RT.anchoredPosition, (val) => About_RT.anchoredPosition = val, new Vector2(About_RT.anchoredPosition.x, About_RT.anchoredPosition.y - 150), 0.1f).OnUpdate(() =>
-        //{
-        //    LayoutRebuilder.ForceRebuildLayoutImmediate(About_RT);
-        //});
-
-        DOTween.To(() => Paytable_RT.anchoredPosition, (val) => Paytable_RT.anchoredPosition = val, new Vector2(Paytable_RT.anchoredPosition.x, Paytable_RT.anchoredPosition.y - 125), 0.1f).OnUpdate(() =>
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(Paytable_RT);
-        });
-
-        DOTween.To(() => Settings_RT.anchoredPosition, (val) => Settings_RT.anchoredPosition = val, new Vector2(Settings_RT.anchoredPosition.x, Settings_RT.anchoredPosition.y - 250), 0.1f).OnUpdate(() =>
-        {
-            LayoutRebuilder.ForceRebuildLayoutImmediate(Settings_RT);
-        });
-
-        DOVirtual.DelayedCall(0.1f, () =>
-         {
-             if (Menu_Object) Menu_Object.SetActive(true);
-             if (Exit_Object) Exit_Object.SetActive(false);
-             //if (About_Object) About_Object.SetActive(false);
-             if (Paytable_Object) Paytable_Object.SetActive(false);
-             if (Settings_Object) Settings_Object.SetActive(false);
-         });
     }
 
     private void OpenPopup(GameObject Popup)
