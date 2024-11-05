@@ -152,7 +152,7 @@ public class SlotBehaviour : MonoBehaviour
     private Coroutine BoxAnimRoutine = null;
     private Coroutine tweenroutine;
 
-    private bool IsFreeSpin = false;
+    internal bool IsFreeSpin = false;
     private bool IsSpinning = false;
     private bool CheckSpinAudio = false;
     internal bool CheckPopups = false;
@@ -656,7 +656,6 @@ public class SlotBehaviour : MonoBehaviour
             {
                 ToggleButtonGrp(true);
                 uiManager.FreeSpinProcessStart((int)SocketManager.resultData.freeSpin.freeSpinCount, currentTotalBet);
-                Debug.Log("freespin in free spin");
             }
             else
             {
@@ -685,6 +684,7 @@ public class SlotBehaviour : MonoBehaviour
 
     private void EnableFreespinPlayButton()
     {
+        if (audioController) audioController.SwitchBGSound(true);
         if (KTRStart_Button) KTRStart_Button.gameObject.SetActive(false);
         if (uiManager) uiManager.ToggleBonusRText(false);
         uiManager.FreeSpinProcessStart((int)SocketManager.resultData.freeSpin.freeSpinCount, currentTotalBet, true);
@@ -755,8 +755,9 @@ public class SlotBehaviour : MonoBehaviour
     {
         List<int> y_points = null;
         List<int> points_anim = null;
-        if (LineId.Count > 0 || points_AnimString.Count > 0 || BonusSymbols.Count > 0 || ScatterSymbols.Count > 0)  
+        if (LineId.Count > 0 || points_AnimString.Count > 0 || BonusSymbols.Count > 0 || ScatterSymbols.Count > 0)
         {
+            if (audioController) audioController.PlayWLAudio("win");
             for (int i = 0; i < LineId.Count; i++)
             {
                 y_points = y_string[LineId[i] + 1]?.Split(',')?.Select(Int32.Parse)?.ToList();
@@ -828,8 +829,6 @@ public class SlotBehaviour : MonoBehaviour
         }
         else
         {
-
-            //if (audioController) audioController.PlayWLAudio("lose");
             if (audioController) audioController.StopWLAaudio();
         }
         if (LineId.Count > 0 || BonusSymbols.Count > 0 || ScatterSymbols.Count > 0)  

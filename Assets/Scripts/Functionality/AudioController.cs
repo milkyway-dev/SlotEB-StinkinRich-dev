@@ -72,14 +72,8 @@ public class AudioController : MonoBehaviour
             case "win":
                 index = 1;
                 break;
-            case "lose":
-                index = 2;
-                break;
-            case "spinStop":
-                index = 3;
-                break;
             case "megaWin":
-                index = 4;
+                index = 2;
                 break;
         }
         StopWLAaudio();
@@ -94,14 +88,11 @@ public class AudioController : MonoBehaviour
         int index = 0;
         switch (type)
         {
-            case "win":
+            case "trash":
                 index = 0;
                 break;
-            case "lose":
+            case "vault":
                 index = 1;
-                break;
-            case "cycleSpin":
-                index = 2;
                 break;
         }
         StopBonusAaudio();
