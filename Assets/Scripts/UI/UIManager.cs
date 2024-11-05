@@ -46,6 +46,8 @@ public class UIManager : MonoBehaviour
     private Button Sound_Button;
     [SerializeField]
     private Button Music_Button;
+    [SerializeField]
+    private Button Settings_Button;
 
     [SerializeField]
     private GameObject MusicOn_Object;
@@ -258,6 +260,9 @@ public class UIManager : MonoBehaviour
         if (SettingsExit_Button) SettingsExit_Button.onClick.RemoveAllListeners();
         if (SettingsExit_Button) SettingsExit_Button.onClick.AddListener(delegate { ClosePopup(SettingsPopup_Object); });
 
+        if (Settings_Button) Settings_Button.onClick.RemoveAllListeners();
+        if (Settings_Button) Settings_Button.onClick.AddListener(delegate { OpenPopup(SettingsPopup_Object); });
+
         if (MusicOn_Object) MusicOn_Object.SetActive(true);
         if (MusicOff_Object) MusicOff_Object.SetActive(false);
 
@@ -348,7 +353,8 @@ public class UIManager : MonoBehaviour
 
     internal void PopulateWin(int value, double amount)
     {
-        switch(value)
+        if (audioController) audioController.PlayWLAudio("megaWin");
+        switch (value)
         {
             case 1:
                 if (Win_Image) Win_Image.sprite = BigWin_Sprite;
@@ -399,6 +405,7 @@ public class UIManager : MonoBehaviour
             if (FreeSpinCompletePopup_Object) FreeSpinCompletePopup_Object.SetActive(false);
             if (MainPopup_Object) MainPopup_Object.SetActive(false);
             ToggleKTR(false);
+            if (audioController) audioController.SwitchBGSound(false);
         });
     }
 
@@ -443,7 +450,8 @@ public class UIManager : MonoBehaviour
 
     private void ToggleKTR(bool isActive)
     {
-        if(isActive)
+        if (audioController) audioController.PlayBonusAudio("vault");
+        if (isActive)
         {
             if (LockerMain_Object) LockerMain_Object.SetActive(true);
             if (LockerOpen_Object) LockerOpen_Object.SetActive(true);

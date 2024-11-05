@@ -48,19 +48,17 @@ public class BonusController : MonoBehaviour
     private TMP_Text MultiVal_text;
     [SerializeField]
     private TMP_Text TotalWIn_text;
+    [SerializeField]
+    private AudioController audioController;
 
     private int totalWin = 0;
     private int Win = 0;
     private List<TrashCashFunctionality> tempList = new List<TrashCashFunctionality>();
     private BonusData savedData;
 
-    private void Start()
-    {
-
-    }
-
     internal void StartBonus(BonusData data)
     {
+        if (audioController) audioController.SwitchBGSound(true);
         ResetTrash();
         savedData = data;
         tempList.Clear();
@@ -107,6 +105,7 @@ public class BonusController : MonoBehaviour
 
     internal int GetTrashValue()
     {
+        if (audioController) audioController.PlayBonusAudio("trash");
         if (RayCast_Panel) RayCast_Panel.SetActive(true);
         return savedData.shuffledBonusValues[savedData.shuffledBonusValues.Count - 1];
     }
@@ -179,6 +178,10 @@ public class BonusController : MonoBehaviour
         if (TrashCash_Title) TrashCash_Title.SetActive(false);
         if (MainGame_Title) MainGame_Title.SetActive(true);
         if (slotManager) slotManager.CheckWinPopups();
+        if (!slotManager.IsFreeSpin)
+        {
+            if (audioController) audioController.SwitchBGSound(false);
+        }
     }
 
     private void Showbanner()
