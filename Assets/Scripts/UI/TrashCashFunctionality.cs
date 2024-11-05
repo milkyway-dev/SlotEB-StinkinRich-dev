@@ -29,12 +29,12 @@ public class TrashCashFunctionality : MonoBehaviour
 
     private void Start()
     {
-        isOpen = false;
         if (trash_Button) trash_Button.onClick.RemoveAllListeners();
         if (trash_Button) trash_Button.onClick.AddListener(delegate { OpenTrash(true); });
     }
     private void OnEnable()
     {
+        isOpen = false;
         if (Value_Transform) Value_Transform.gameObject.SetActive(false);
         if (Multiplier_Transform) Multiplier_Transform.gameObject.SetActive(false);
         if (Line_Object) Line_Object.SetActive(false);
