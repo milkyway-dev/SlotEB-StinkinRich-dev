@@ -36,6 +36,12 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject[] Info_Screens;
     int screenCounter = 0;
+    [SerializeField]
+    private Button lastQuit_Button;
+    [SerializeField]
+    private Button lastArrLeft_Button;
+    [SerializeField]
+    private Button lastArrRight_Button;
 
     [Header("Settings Popup")]
     [SerializeField]
@@ -256,6 +262,15 @@ public class UIManager : MonoBehaviour
 
         if (Left_Button) Left_Button.onClick.RemoveAllListeners();
         if (Left_Button) Left_Button.onClick.AddListener(delegate { ChangePage(false); });
+
+        if (lastQuit_Button) lastQuit_Button.onClick.RemoveAllListeners();
+        if (lastQuit_Button) lastQuit_Button.onClick.AddListener(delegate { ClosePopup(PaytablePopup_Object); });
+
+        if (lastArrRight_Button) lastArrRight_Button.onClick.RemoveAllListeners();
+        if (lastArrRight_Button) lastArrRight_Button.onClick.AddListener(delegate { ChangePage(true); });
+
+        if (lastArrLeft_Button) lastArrLeft_Button.onClick.RemoveAllListeners();
+        if (lastArrLeft_Button) lastArrLeft_Button.onClick.AddListener(delegate { ChangePage(false); });
 
         if (SettingsExit_Button) SettingsExit_Button.onClick.RemoveAllListeners();
         if (SettingsExit_Button) SettingsExit_Button.onClick.AddListener(delegate { ClosePopup(SettingsPopup_Object); });
