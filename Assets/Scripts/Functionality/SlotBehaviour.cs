@@ -629,16 +629,6 @@ public class SlotBehaviour : MonoBehaviour
 
         CheckPopups = true;
 
-
-        if(IsFreeSpin)
-        {
-            uiManager.UpdateUI(FreeSpinCounter, SocketManager.playerdata.currentWining);
-        }
-
-        if (Balance_text) Balance_text.text = SocketManager.playerdata.Balance.ToString("f2");
-
-        currentBalance = SocketManager.playerdata.Balance;
-
         if (SocketManager.resultData.bonusData.isBonus)
         {
             CheckBonusGame();
@@ -649,6 +639,15 @@ public class SlotBehaviour : MonoBehaviour
         }
 
         yield return new WaitUntil(() => !CheckPopups);
+
+        if (IsFreeSpin)
+        {
+            uiManager.UpdateUI(FreeSpinCounter, SocketManager.playerdata.currentWining);
+        }
+        if (Balance_text) Balance_text.text = SocketManager.playerdata.Balance.ToString("f2");
+
+        currentBalance = SocketManager.playerdata.Balance;
+
         if (SocketManager.resultData.freeSpin.isNewAdded)
         {
             FreeSpinCounter = (int)SocketManager.resultData.freeSpin.freeSpinCount;

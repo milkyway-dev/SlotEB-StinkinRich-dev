@@ -440,12 +440,12 @@ public class UIManager : MonoBehaviour
 
     private void ShowPopupProcess(int freeSpins, bool isBegin)
     {
-        float time = 2f;
+        float time = 3f;
         if(isBegin)
         {
             time = 5f;
         }
-        if (FS_Text) FS_Text.text = "You have been awarded with <size=100><color=green>" + freeSpins + "</color></size> extra free spins";
+        if (FS_Text) FS_Text.text = "You have been awarded with extra free spins.You have <size=100><color=green>" + freeSpins + "</color></size> free spins left.";
         if (FS_Image) FS_Image.color = FS_Image.color = new Color(FS_Image.color.r, FS_Image.color.g, FS_Image.color.b, 1f); 
         if (FSTitle_Image) FSTitle_Image.color = FSTitle_Image.color = new Color(FSTitle_Image.color.r, FSTitle_Image.color.g, FSTitle_Image.color.b, 1f); 
         if (FS_Text) FS_Text.color = FS_Text.color = new Color(FS_Text.color.r, FS_Text.color.g, FS_Text.color.b, 1f);

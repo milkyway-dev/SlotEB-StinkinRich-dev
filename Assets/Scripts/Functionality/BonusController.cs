@@ -147,7 +147,7 @@ public class BonusController : MonoBehaviour
         if (MainPopup_Object) MainPopup_Object.SetActive(true);
         if (BonusVal_text) BonusVal_text.text = Win.ToString();
         if (MultiVal_text) MultiVal_text.text = savedData.selectedBonusMultiplier.ToString() + "x";
-        if (TotalWIn_text) TotalWIn_text.text = totalWin.ToString();
+        if (TotalWIn_text) TotalWIn_text.text = totalWin.ToString() + "x";
         if (WinPopup_Object) WinPopup_Object.SetActive(true);
         if (WinPopup_Image) WinPopup_Image.DOFade(1f, 1f);
         yield return new WaitForSeconds(0.5f);
