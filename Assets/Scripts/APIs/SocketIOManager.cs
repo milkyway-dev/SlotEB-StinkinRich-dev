@@ -38,7 +38,7 @@ public class SocketIOManager : MonoBehaviour
     private string testToken;
 
     protected string gameID = "SL-SR";
-    //protected string gameID = "";
+    // protected string gameID = "";
 
     internal bool isLoaded = false;
 
