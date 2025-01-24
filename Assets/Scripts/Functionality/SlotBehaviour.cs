@@ -975,15 +975,15 @@ public class SlotBehaviour : MonoBehaviour
     {
         if (TotalWin_text) TotalWin_text.text = SocketManager.playerdata.currentWining.ToString("f3");
         // = currentTotalBet * 10 && SocketManager.resultData.WinAmout < currentTotalBet * 15
-        if (SocketManager.playerdata.currentWining >0)
+        if (SocketManager.playerdata.currentWining >= currentTotalBet * 5 && SocketManager.playerdata.currentWining < currentTotalBet * 10)
         {
             uiManager.PopulateWin(1, SocketManager.playerdata.currentWining);
         }
-        else if (SocketManager.playerdata.currentWining >= currentTotalBet * 15 && SocketManager.playerdata.currentWining < currentTotalBet * 20)
+        else if (SocketManager.playerdata.currentWining >= currentTotalBet * 10 && SocketManager.playerdata.currentWining < currentTotalBet * 15)
         {
             uiManager.PopulateWin(2, SocketManager.playerdata.currentWining);
         }
-        else if (SocketManager.playerdata.currentWining >= currentTotalBet * 20)
+        else if (SocketManager.playerdata.currentWining >= currentTotalBet * 15)
         {
             uiManager.PopulateWin(3, SocketManager.playerdata.currentWining);
         }
