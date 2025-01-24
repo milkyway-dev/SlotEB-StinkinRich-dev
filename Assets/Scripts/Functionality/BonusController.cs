@@ -13,6 +13,7 @@ public class BonusController : MonoBehaviour
     private SlotBehaviour slotManager;
     [SerializeField]
     private AudioController _audioManager;
+    [SerializeField] SocketIOManager SocketManager;
     [SerializeField]
     private GameObject PopupPanel;
     [SerializeField]
@@ -178,6 +179,7 @@ public class BonusController : MonoBehaviour
         if (TrashCash_Title) TrashCash_Title.SetActive(false);
         if (MainGame_Title) MainGame_Title.SetActive(true);
         if (slotManager) slotManager.CheckWinPopups();
+        slotManager.Balance_text.text = SocketManager.playerdata.Balance.ToString("f3");
         if (!slotManager.IsFreeSpin)
         {
             if (audioController) audioController.SwitchBGSound(false);

@@ -2514,6 +2514,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotManager: {fileID: 2046803210}
   _audioManager: {fileID: 1030743558465206379}
+  SocketManager: {fileID: 500036492}
   PopupPanel: {fileID: 0}
   Bonusimages:
   - slotImages:
@@ -13147,7 +13148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotManager: {fileID: 2046803210}
   uiManager: {fileID: 377874625}
-  testToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDgzY2U1YTI3YmY5MDI0NDNlYjRjMCIsInVzZXJuYW1lIjoic2F5YW4iLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzM2NTc4MTAzLCJleHAiOjE3MzcxODI5MDN9.xXVvzg93RmcQCvtGgYXSmkAp_WqJENO_Ivys3-M6JY8
+  testToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NzkxOTI3OTgxYmU0MzlkMjkyYjg4OSIsInVzZXJuYW1lIjoiTWVodWwiLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzM3NTI2ODQwLCJleHAiOjE3MzgxMzE2NDB9.gCnORO8OuzNu_AgEob5L_NAb0BfJDqnIf2Y5QCxYYNw
 --- !u!1 &508636967
 GameObject:
   m_ObjectHideFlags: 0
