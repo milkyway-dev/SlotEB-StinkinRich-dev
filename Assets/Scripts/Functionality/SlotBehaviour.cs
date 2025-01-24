@@ -115,7 +115,7 @@ public class SlotBehaviour : MonoBehaviour
 
     [Header("Miscellaneous UI")]
     [SerializeField]
-    private TMP_Text Balance_text;
+    internal TMP_Text Balance_text;
     [SerializeField]
     private TMP_Text TotalBet_text;
     [SerializeField]
@@ -187,9 +187,6 @@ public class SlotBehaviour : MonoBehaviour
 
     [Header("for Free spins")]
     private Coroutine FreeSpinRoutine = null;
-
-    
-
 
     private void Start()
     {
@@ -478,7 +475,7 @@ public class SlotBehaviour : MonoBehaviour
         BetCounter = 0;
         if (LineBet_text) LineBet_text.text = SocketManager.initialData.Bets[BetCounter].ToString();
         if (TotalBet_text) TotalBet_text.text = (SocketManager.initialData.Bets[BetCounter] * Lines).ToString();
-        if (TotalWin_text) TotalWin_text.text = "0.00";
+        if (TotalWin_text) TotalWin_text.text = "0.000";
         if (Balance_text) Balance_text.text = SocketManager.playerdata.Balance.ToString("f3");
         currentBalance = SocketManager.playerdata.Balance;
         currentTotalBet = SocketManager.initialData.Bets[BetCounter] * Lines;
@@ -690,7 +687,7 @@ public class SlotBehaviour : MonoBehaviour
     private void StartSlots(bool autoSpin = false)
     {
         if (audioController) audioController.PlaySpinButtonAudio();
-
+        if (TotalWin_text) TotalWin_text.text = "0.000";
         if (!autoSpin)
         {
             if (AutoSpinRoutine != null)
@@ -825,7 +822,7 @@ public class SlotBehaviour : MonoBehaviour
         CheckPayoutLineBackend(SocketManager.resultData.linesToEmit, SocketManager.resultData.FinalsymbolsToEmit, SocketManager.tempBonus.trashForCashWinningSymbols, SocketManager.resultData.scatterWinningSymbols);
         CheckPopups = true;
         BalanceTween?.Kill();
-        if (Balance_text) Balance_text.text = SocketManager.playerdata.Balance.ToString("f3");
+        if (Balance_text && !SocketManager.resultData.bonusData.isBonus) Balance_text.text = SocketManager.playerdata.Balance.ToString("f3");
 
         currentBalance = SocketManager.playerdata.Balance;
 
