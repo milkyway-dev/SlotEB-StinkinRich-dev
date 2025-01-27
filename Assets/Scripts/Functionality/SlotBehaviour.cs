@@ -160,7 +160,7 @@ public class SlotBehaviour : MonoBehaviour
     private bool CheckSpinAudio = false;
     internal bool CheckPopups = false;
 
-    private int BetCounter = 0;
+    internal int BetCounter = 0;
     private int FreeSpinCounter = 0;
     private double currentBalance = 0;
     private double currentTotalBet = 0;
@@ -964,7 +964,7 @@ public class SlotBehaviour : MonoBehaviour
 
         BalanceTween = DOTween.To(() => initAmount, (val) => initAmount = val, balance, 0.8f).OnUpdate(() =>
         {
-            if (Balance_text) Balance_text.text = initAmount.ToString("f2");
+            if (Balance_text) Balance_text.text = initAmount.ToString("f3");
         });
     }
 
