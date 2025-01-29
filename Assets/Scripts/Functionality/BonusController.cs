@@ -11,11 +11,7 @@ public class BonusController : MonoBehaviour
 {
     [SerializeField]
     private SlotBehaviour slotManager;
-    [SerializeField]
-    private AudioController _audioManager;
     [SerializeField] SocketIOManager SocketManager;
-    [SerializeField]
-    private GameObject PopupPanel;
     [SerializeField]
     private List<SlotImage> Bonusimages;
     [SerializeField]
@@ -138,46 +134,45 @@ public class BonusController : MonoBehaviour
 
     private IEnumerator PopupRoutine()
     {
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(2f);
         if(WinPopup_Image)WinPopup_Image.color = new Color(WinPopup_Image.color.r, WinPopup_Image.color.g, WinPopup_Image.color.b, 0f);
-        if(Title_text) Title_text.color = new Color(Title_text.color.r, Title_text.color.g, Title_text.color.b, 0f);
-        if(BonusTitle_text) BonusTitle_text.color = new Color(BonusTitle_text.color.r, BonusTitle_text.color.g, BonusTitle_text.color.b, 0f);
-        if(Multi_text) Multi_text.color = new Color(Multi_text.color.r, Multi_text.color.g, Multi_text.color.b, 0f);
-        if(BonusVal_text) BonusVal_text.color = new Color(BonusVal_text.color.r, BonusVal_text.color.g, BonusVal_text.color.b, 0f);
-        if(MultiVal_text) MultiVal_text.color = new Color(MultiVal_text.color.r, MultiVal_text.color.g, MultiVal_text.color.b, 0f);
+        // if(Title_text) Title_text.color = new Color(Title_text.color.r, Title_text.color.g, Title_text.color.b, 0f);
+        // if(BonusTitle_text) BonusTitle_text.color = new Color(BonusTitle_text.color.r, BonusTitle_text.color.g, BonusTitle_text.color.b, 0f);
+        // if(Multi_text) Multi_text.color = new Color(Multi_text.color.r, Multi_text.color.g, Multi_text.color.b, 0f);
+        // if(BonusVal_text) BonusVal_text.color = new Color(BonusVal_text.color.r, BonusVal_text.color.g, BonusVal_text.color.b, 0f);
+        // if(MultiVal_text) MultiVal_text.color = new Color(MultiVal_text.color.r, MultiVal_text.color.g, MultiVal_text.color.b, 0f);
         if(TotalWIn_text) TotalWIn_text.color = new Color(TotalWIn_text.color.r, TotalWIn_text.color.g, TotalWIn_text.color.b, 0f);
         if(TotalWonTitle_Text) TotalWonTitle_Text.color = new Color(TotalWonTitle_Text.color.r, TotalWonTitle_Text.color.g, TotalWonTitle_Text.color.b, 0);
         if (MainPopup_Object) MainPopup_Object.SetActive(true);
-        if (BonusVal_text) BonusVal_text.text = Win.ToString();
-        if (MultiVal_text) MultiVal_text.text = savedData.selectedBonusMultiplier.ToString() + "x";
-        int multipliedValue = Win*savedData.selectedBonusMultiplier;
-        if (TotalWIn_text) TotalWIn_text.text = (Win*savedData.selectedBonusMultiplier).ToString() + "X" + SocketManager.initialData.Bets[slotManager.BetCounter].ToString() + "=" + SocketManager.playerdata.currentWining.ToString("F3");
-        // if (TotalWIn_text) TotalWIn_text.text = totalWin.ToString() + "x";
+        // if (BonusVal_text) BonusVal_text.text = Win.ToString();
+        // if (MultiVal_text) MultiVal_text.text = savedData.selectedBonusMultiplier.ToString() + "x";
+        // int multipliedValue = Win*savedData.selectedBonusMultiplier;
+        if (TotalWIn_text) TotalWIn_text.text = SocketManager.playerdata.currentWining.ToString("F3");
         if (WinPopup_Object) WinPopup_Object.SetActive(true);
-        if (WinPopup_Image) WinPopup_Image.DOFade(1f, 1f);
-        yield return new WaitForSeconds(0.5f);
-        if (Title_text) Title_text.DOFade(1f, 0.3f);
-        yield return new WaitForSeconds(0.5f);
-        if (BonusTitle_text) BonusTitle_text.DOFade(1f, 0.3f);
-        yield return new WaitForSeconds(0.5f);
-        if (BonusVal_text) BonusVal_text.DOFade(1f, 0.3f);
-        yield return new WaitForSeconds(0.5f);
-        if (Multi_text) Multi_text.DOFade(1f, 0.3f);
-        yield return new WaitForSeconds(0.5f);
-        if (MultiVal_text) MultiVal_text.DOFade(1f, 0.3f);
-        yield return new WaitForSeconds(0.5f);
+        if (WinPopup_Image) WinPopup_Image.DOFade(1f, .5f);
+        yield return new WaitForSeconds(0.2f);
+        // if (Title_text) Title_text.DOFade(1f, 0.3f);
+        // yield return new WaitForSeconds(0.5f);
+        // if (BonusTitle_text) BonusTitle_text.DOFade(1f, 0.3f);
+        // yield return new WaitForSeconds(0.5f);
+        // if (BonusVal_text) BonusVal_text.DOFade(1f, 0.3f);
+        // yield return new WaitForSeconds(0.5f);
+        // if (Multi_text) Multi_text.DOFade(1f, 0.3f);
+        // yield return new WaitForSeconds(0.5f);
+        // if (MultiVal_text) MultiVal_text.DOFade(1f, 0.3f);
+        // yield return new WaitForSeconds(0.5f);
         if (TotalWIn_text) TotalWIn_text.DOFade(1f, 0.3f);
         if(TotalWonTitle_Text) TotalWonTitle_Text.DOFade(1, 0.3f);
         yield return new WaitForSeconds(3f);
         if (WinPopup_Image) WinPopup_Image.DOFade(0f, 1f);
-        if (Title_text) Title_text.DOFade(0f, 1f);
-        if (BonusTitle_text) BonusTitle_text.DOFade(0f, 1f);
-        if (BonusVal_text) BonusVal_text.DOFade(0f, 1f);
-        if (Multi_text) Multi_text.DOFade(0f, 1f);
-        if (MultiVal_text) MultiVal_text.DOFade(0f, 1f);
-        if (TotalWIn_text) TotalWIn_text.DOFade(0f, 1f);
-        if(TotalWonTitle_Text) TotalWonTitle_Text.DOFade(0, 1f);
-        yield return new WaitForSeconds(1.5f);
+        // if (Title_text) Title_text.DOFade(0f, 1f);
+        // if (BonusTitle_text) BonusTitle_text.DOFade(0f, 1f);
+        // if (BonusVal_text) BonusVal_text.DOFade(0f, 1f);
+        // if (Multi_text) Multi_text.DOFade(0f, 1f);
+        // if (MultiVal_text) MultiVal_text.DOFade(0f, 1f);
+        if (TotalWIn_text) TotalWIn_text.DOFade(0f, 0.5f);
+        if(TotalWonTitle_Text) TotalWonTitle_Text.DOFade(0, 0.5f);
+        yield return new WaitForSeconds(0.6f);
         if (WinPopup_Object) WinPopup_Object.SetActive(false);
         if (MainPopup_Object) MainPopup_Object.SetActive(false);
         if (Bonusbanner_Object) Bonusbanner_Object.SetActive(false);
