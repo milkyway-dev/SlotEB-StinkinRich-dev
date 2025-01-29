@@ -66,10 +66,10 @@ public class BonusController : MonoBehaviour
         List<string> points_AnimString = savedData.trashForCashWinningSymbols.ConvertAll(item => item.Replace(",", ""));
         List<int> points_anim = null;
 
-        foreach (string item in points_AnimString)
-        {
-            Debug.Log(item);
-        }
+        // foreach (string item in points_AnimString)
+        // {
+        //     Debug.Log(item);
+        // }
 
         for (int i = 0; i < points_AnimString.Count; i++)
         {
@@ -147,7 +147,9 @@ public class BonusController : MonoBehaviour
         // if (BonusVal_text) BonusVal_text.text = Win.ToString();
         // if (MultiVal_text) MultiVal_text.text = savedData.selectedBonusMultiplier.ToString() + "x";
         // int multipliedValue = Win*savedData.selectedBonusMultiplier;
-        if (TotalWIn_text) TotalWIn_text.text = SocketManager.playerdata.currentWining.ToString("F3");
+        double winnings = SocketManager.resultData.bonusData.bonusWin * SocketManager.initialData.Bets[slotManager.BetCounter];
+        print("Trash for cash amount: " + winnings);
+        if (TotalWIn_text) TotalWIn_text.text = winnings.ToString("F3");
         if (WinPopup_Object) WinPopup_Object.SetActive(true);
         if (WinPopup_Image) WinPopup_Image.DOFade(1f, .5f);
         yield return new WaitForSeconds(0.2f);
