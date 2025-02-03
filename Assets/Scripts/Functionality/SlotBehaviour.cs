@@ -154,7 +154,7 @@ public class SlotBehaviour : MonoBehaviour
     private Coroutine BoxAnimRoutine = null;
     private Coroutine tweenroutine;
 
-    private bool IsAutoSpin = false;
+    [SerializeField] private bool IsAutoSpin = false;
     internal bool IsFreeSpin = false;
     private bool IsSpinning = false;
     private bool CheckSpinAudio = false;
@@ -293,14 +293,18 @@ public class SlotBehaviour : MonoBehaviour
         WasAutoSpinOn = false;
         yield return new WaitUntil(() => !IsSpinning);
         ToggleButtonGrp(true);
-        if (AutoSpinRoutine != null || tweenroutine != null)
+        if (AutoSpinRoutine != null)
         {
             StopCoroutine(AutoSpinRoutine);
+            AutoSpinRoutine = null;
+
+        }
+        if (tweenroutine != null)
+        {
             StopCoroutine(tweenroutine);
             tweenroutine = null;
-            AutoSpinRoutine = null;
-            StopCoroutine(StopAutoSpinCoroutine());
         }
+
     }
 
     internal void FreeSpin(int spins)
@@ -327,7 +331,7 @@ public class SlotBehaviour : MonoBehaviour
     {
         int i = 0;
         AutoSpinStop_Button.interactable = false;
-        uiManager.BonusWin=0;
+        uiManager.BonusWin = 0;
         while (i < spinchances)
         {
             StartSlots();
@@ -337,8 +341,8 @@ public class SlotBehaviour : MonoBehaviour
         }
         if (!AutoSpinStop_Button.interactable) AutoSpinStop_Button.interactable = true;
         uiManager.FreeSpinProcessStop();
-        FreeSpinCounter=0;
-        uiManager.FreeSpins=0;
+        FreeSpinCounter = 0;
+        uiManager.FreeSpins = 0;
         if (WasAutoSpinOn)
         {
             AutoSpin();
@@ -356,12 +360,8 @@ public class SlotBehaviour : MonoBehaviour
         if (currentBalance < currentTotalBet)
         {
             uiManager.LowBalPopup();
-            // if (SlotStart_Button) SlotStart_Button.interactable = false;
         }
-        else
-        {
-            // if (SlotStart_Button) SlotStart_Button.interactable = true;
-        }
+
     }
 
     #region LinesCalculation
@@ -716,10 +716,12 @@ public class SlotBehaviour : MonoBehaviour
         if (currentBalance < currentTotalBet && !IsFreeSpin)
         {
             CompareBalance();
-            yield return new WaitForSeconds(1);
+            StopAutoSpin();
+            // yield return new WaitForSeconds(0.5f);
             ToggleButtonGrp(true);
             yield break;
         }
+
         if (IsFreeSpin)
         {
             FreeSpinCounter--;
@@ -733,7 +735,8 @@ public class SlotBehaviour : MonoBehaviour
         IsSpinning = true;
 
         ToggleButtonGrp(false);
-                if(!IsTurboOn && !IsFreeSpin && !IsAutoSpin){
+        if (!IsTurboOn && !IsFreeSpin && !IsAutoSpin)
+        {
             StopSpin_Button.gameObject.SetActive(true);
         }
 
@@ -1211,7 +1214,7 @@ public class SlotBehaviour : MonoBehaviour
         if (TBPlus_Button) TBPlus_Button.interactable = toggle;
         if (TBMinus_Button) TBMinus_Button.interactable = toggle;
         if (Settings_Button) Settings_Button.interactable = toggle;
-        if(AutoSpin_Button) AutoSpin_Button.interactable=toggle;
+        if (AutoSpin_Button) AutoSpin_Button.interactable = toggle;
     }
 
     //start the icons animation
