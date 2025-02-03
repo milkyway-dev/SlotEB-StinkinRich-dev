@@ -13281,7 +13281,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slotManager: {fileID: 2046803210}
   uiManager: {fileID: 377874625}
-  testToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OWEwZjAzNzA4ZDZlOGE0YjZiZGRmYSIsInVzZXJuYW1lIjoibWVodWwtdGVzdCIsInJvbGUiOiJwbGF5ZXIiLCJpYXQiOjE3MzgxNDk5OTQsImV4cCI6MTczODc1NDc5NH0.oMA2K3VDkszm6YNYg60npNLdXbnNu89ZffG3H32Gvhc
+  testToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3OWEwZjAzNzA4ZDZlOGE0YjZiZGRmYSIsInVzZXJuYW1lIjoibWVodWwtdGVzdCIsInJvbGUiOiJwbGF5ZXIiLCJpYXQiOjE3MzgyOTczMjYsImV4cCI6MTczODkwMjEyNn0.5uXpZ7NO5v6YcFOzLDx3ADCzyDzD4ldF3Q8oMsOlSQU
 --- !u!1 &508636967
 GameObject:
   m_ObjectHideFlags: 0
@@ -28480,7 +28480,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 316, y: 207}
+  m_AnchoredPosition: {x: 336, y: 225}
   m_SizeDelta: {x: 132, y: 82.085}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1042341366
@@ -57690,6 +57690,7 @@ MonoBehaviour:
   PayCalculator: {fileID: 963807277}
   TempList: []
   SocketManager: {fileID: 500036492}
+  IsAutoSpin: 0
   IconSizeFactor: 145
   TurboToggleSprite: {fileID: 21300000, guid: da1b7641072e541b39324a9d31fff41a, type: 3}
   Turbo_Button: {fileID: 1267691540}
@@ -61435,8 +61436,8 @@ SceneRoots:
   - {fileID: 1571308677}
   - {fileID: 2046803209}
   - {fileID: 963807278}
-  - {fileID: 377874624}
   - {fileID: 500036491}
+  - {fileID: 377874624}
   - {fileID: 65498558}
   - {fileID: 8217964018994044620}
   - {fileID: 5907248699278876388}
